@@ -1,5 +1,6 @@
-﻿using BitBots.BitBomber.Features.View;
+﻿using BitBots.BitBomber.Features.GameBoard;
 using BitBots.BitBomber.Features.Tiles;
+using BitBots.BitBomber.Features.View;
 
 using Entitas;
 using Entitas.Unity.VisualDebugging;
@@ -32,6 +33,9 @@ namespace BitBots.BitBomber
             #else
             return new Systems()
             #endif
+                // Create GameBoard
+                .Add(pool.CreateSystem<CreateGameBoardSystem>())
+            
                 // Views
                 .Add(pool.CreateSystem<AddPrefabSystem>())
                 .Add(pool.CreateSystem<AddViewSystem>())
