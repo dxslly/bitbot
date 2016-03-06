@@ -1,5 +1,6 @@
 using Entitas;
 using UnityEngine;
+using Jint;
 
 using BitBots.BitBomber.Features.View;
 using BitBots.BitBomber.Features.Tiles;
@@ -41,22 +42,46 @@ namespace BitBots.BitBomber
                 .AddPrefab(_solidTiles[Random.Range(0, _solidTiles.Length)]);
         }
         
-        public static Entity CreatePlayer(this Pool pool, int x, int y, PlayerColor color)
+        public static Entity CreateAIPlayer(this Pool pool, int x, int y, PlayerColor color, string aiScriptPath)
         {
+            // Ensure Script Exist
+            TextAsset textAsset = Resources.Load<TextAsset>(aiScriptPath);
+            if (null == textAsset)
+            {
+                Debug.LogWarning("Unable to load AI Script");
+                return null;
+            }
+            
+            // Ensure Script does not have error
+            string jintErrors = "";
+            if (JintEngine.HasErrors(textAsset.text, out jintErrors))
+            {
+                Debug.LogWarning("Bot script located at '" + aiScriptPath + "' contains the following errors:\n" + jintErrors);
+                // TODO(David): For now we will continue, later do not
+            }
+            
+            JintEngine engine = new JintEngine();
+            engine.Run(textAsset.text);
+            
             Entity e = pool.CreateEntity()
-                .AddTilePosition(x, y);
+                .AddTilePosition(x, y)
+                .AddPlayerAI(engine);
                 
             string prefabPath = "NoPath";
+            string name = "Name";
             switch (color)
             {
             case PlayerColor.Red:
                 prefabPath = Res.redPlayer;
+                name = "Red";
                 break;
             case PlayerColor.Blue:
                 prefabPath = Res.bluePlayer;
+                name = "Blue";
                 break;
             }
             
+            e.AddPlayer(name);
             e.AddPrefab(prefabPath);
             
             return e;
