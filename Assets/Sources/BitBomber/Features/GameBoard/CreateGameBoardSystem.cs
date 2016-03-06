@@ -42,20 +42,22 @@ namespace BitBots.BitBomber.Features.GameBoard
             {
                 for (int y = 0; y < board.height; y++)
                 {
+                    if (x == 0 || x == rightColumn || y == 0 || y == topRow)
+                    {
+                        // Create Solid tile
+                        _pool.CreateSolidTitle(x, y);
+                    }
                     // Ensure it is not a walk row x == rightWalkRow
-                    if (x == rightWalkRow || y == topWalkRow)
+                    else if (x == rightWalkRow || y == topWalkRow)
                     {
                         // Create walkable tile
                         _pool.CreateWalkableTile(x, y);
                     }
                     // Ensure is not outside walls
-                    else if (x == 0 || x == rightColumn || y == 0 || y == topRow)
-                    {
-                        // Create Solid tile
-                    }
                     else
                     {
                         // Create walkable or destroyable tile
+                        _pool.CreateWalkableTile(x, y);
                     }
                 }
             }

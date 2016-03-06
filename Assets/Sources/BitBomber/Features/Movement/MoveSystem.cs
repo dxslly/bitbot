@@ -3,9 +3,9 @@ using Entitas;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BitBots.BitBomber.Features.Player
+namespace BitBots.BitBomber.Features.Movement
 {
-    public class MovePlayerSystem : IReactiveSystem, ISetPool, IEnsureComponents
+    public class MoveSystem : IReactiveSystem, ISetPool, IEnsureComponents
     {
         private Pool _pool;
         
@@ -16,7 +16,7 @@ namespace BitBots.BitBomber.Features.Player
         
         public TriggerOnEvent trigger
         {
-            get { return Matcher.AllOf(CoreMatcher.Player, CoreMatcher.Move, CoreMatcher.TilePosition).OnEntityAdded(); }
+            get { return Matcher.AllOf(CoreMatcher.Move, CoreMatcher.TilePosition).OnEntityAdded(); }
         }
         
         public IMatcher ensureComponents

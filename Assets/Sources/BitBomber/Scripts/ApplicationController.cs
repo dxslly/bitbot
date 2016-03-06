@@ -3,6 +3,7 @@ using BitBots.BitBomber.Features.Tiles;
 using BitBots.BitBomber.Features.View;
 using BitBots.BitBomber.Features.GameTick;
 using BitBots.BitBomber.Features.PlayerAI;
+using BitBots.BitBomber.Features.Movement;
 using Entitas;
 using Entitas.Unity.VisualDebugging;
 using Jint;
@@ -44,7 +45,7 @@ namespace BitBots.BitBomber
             
             // Blue Player
             pool.CreateEntity()
-                .AddTilePosition(0, 0)
+                .AddTilePosition(1, 1)
                 .AddPlayer("Blue Player")
                 .AddPlayerAI(blueEngine)
                 .AddPrefab(Res.bluePlayer);
@@ -74,7 +75,10 @@ namespace BitBots.BitBomber
                 .Add(pool.CreateSystem<ExecuteGameTickSystem>())
                 
                 // AI
-                .Add(pool.CreateSystem<ExecuteAIOnGameTickSystem>());
+                .Add(pool.CreateSystem<ExecuteAIOnGameTickSystem>())
+                
+                // Movement
+                .Add(pool.CreateSystem<MoveSystem>());
         }
     }
 }

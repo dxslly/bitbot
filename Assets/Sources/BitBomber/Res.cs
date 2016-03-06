@@ -18,9 +18,6 @@ namespace BitBots.BitBomber
         public const string solidTile03 = "BitBomber/Prefabs/Tiles/SolidTile01";
         public const string solidTile04 = "BitBomber/Prefabs/Tiles/SolidTile01";
         
-        
-        
-        
         // Players
         public const string redPlayer = "BitBomber/Prefabs/Players/RedPlayer";
         public const string bluePlayer = "BitBomber/Prefabs/Players/BluePlayer";
