@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BitBots.BitBomber.Features.Movement;
 using BitBots.BitBomber.Features.Bomb;
+using System.Linq;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
@@ -31,6 +32,7 @@ namespace BitBots.BitBomber.Features.PlayerAI
             foreach (var e in entities)
             {
                 // Add Hooks to PlayerAI
+                e.playerAI.engine.SetFunction("log", new Jint.Delegates.Action<object>(Debug.Log));
                 e.playerAI.engine.SetFunction("move", new Jint.Delegates.Action<string>((movement) => MovePlayer(e, movement)));
                 e.playerAI.engine.SetFunction("placeBomb", new Jint.Delegates.Action(() => PlaceBomb(e)));
             }
@@ -43,7 +45,7 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 // Execute each AI
                 try
                 {
-                    e.playerAI.engine.CallFunction("OnGameTick", "TEST");
+                    e.playerAI.engine.CallFunction("OnGameTick");
                 }
                 catch (System.Exception exception)
                 {
@@ -52,6 +54,55 @@ namespace BitBots.BitBomber.Features.PlayerAI
                     Debug.Log(exception);
                 }
             }
+        }
+        
+        private int[] BuildAIGrid()
+        {
+            var width = _pool.gameBoard.width;
+            var height = _pool.gameBoard.height;
+            
+            var grid = _pool.gameBoardCache.grid;
+            var aiGrid = new int[width * height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var entity = grid[x, y];
+                    int val = 0;
+                    if (null == entity)
+                    {
+                        val = 0;
+                    }
+                    else if (entity.isCollideable)
+                    {
+                        val = 1;
+                    }
+                    else
+                    {
+                        val = 0;
+                    }
+                    
+                    aiGrid[(x * width + y)] = val;
+                }
+            }
+            
+            return aiGrid;
+        }
+        
+        private List<Vector2> BuildPlayers(Entity player)
+        {
+            List<Vector2> players = new List<Vector2>();
+            foreach (var e in _aiPlayers.GetEntities())
+            {
+                if (e.Equals(player))
+                {
+                    continue;
+                }
+                
+                players.Add(new Vector2(player.tilePosition.x, player.tilePosition.y));
+            }
+            
+            return players;
         }
         
         private void MovePlayer(Entity entity, string movement)

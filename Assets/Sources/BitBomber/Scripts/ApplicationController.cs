@@ -8,6 +8,7 @@ using BitBots.BitBomber.Features.Movement;
 using BitBots.BitBomber.Features.Bomb;
 using BitBots.BitBomber.Features.Expireable;
 using BitBots.BitBomber.Features.Destroyable;
+using BitBots.BitBomber.Features.Damageable;
 using Entitas;
 using Entitas.Unity.VisualDebugging;
 using UnityEngine;
@@ -70,6 +71,9 @@ namespace BitBots.BitBomber
                 
                 // Expirable
                 .Add(pool.CreateSystem<ExpireSystem>())
+                
+                // Damage
+                .Add(pool.CreateSystem<DamageSystem>())
                 
                 // Bomb
                 .Add(pool.CreateSystem<ExplodeBombSysem>())

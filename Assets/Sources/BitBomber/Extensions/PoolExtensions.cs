@@ -84,6 +84,7 @@ namespace BitBots.BitBomber
             
             Entity e = pool.CreateEntity()
                 .AddTilePosition(x, y)
+                .IsDamageable(true)
                 .AddHealth(1)
                 .AddPlayerAI(engine);
                 
