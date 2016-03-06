@@ -1,6 +1,7 @@
 ﻿using BitBots.BitBomber.Features.GameBoard;
 using BitBots.BitBomber.Features.Tiles;
 using BitBots.BitBomber.Features.View;
+using BitBots.BitBomber.Features.GameTick;
 
 using Entitas;
 using Entitas.Unity.VisualDebugging;
@@ -43,7 +44,10 @@ namespace BitBots.BitBomber
                 .Add(pool.CreateSystem<RemoveViewSystem>())
                 
                 // Tiles
-                .Add(pool.CreateSystem<RenderTilePositionSystem>());
+                .Add(pool.CreateSystem<RenderTilePositionSystem>())
+                
+                // Execute GameTick
+                .Add(pool.CreateSystem<ExecuteGameTickSystem>());
         }
     }
 }
