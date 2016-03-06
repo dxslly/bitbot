@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
-    public interface PlayerAI
+    public interface IPlayerAI
     {
-        public void OnGameTick()
-        {}
+        void OnGameTick();
     }
 }
