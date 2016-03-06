@@ -43,10 +43,11 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 {
                     e.playerAI.engine.CallFunction("OnGameTick", "TEST");
                 }
-                catch (System.Exception)
+                catch (System.Exception exception)
                 {
                     // TODO(David): Track number of errors
                     Debug.Log("Error Executing Bot: " + e.player.playerID);
+                    Debug.Log(exception);
                 }
             }
         }
