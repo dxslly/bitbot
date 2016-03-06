@@ -19,16 +19,18 @@ namespace BitBots.BitBomber.Features.PlayerAI
         }
         
         public void Initialize()
-        {}
+        {
+        }
         
         private void OnGameTick()
         {
             foreach (var e in _aiPlayers.GetEntities())
             {
                 // Create Event
+                e.playerAI.engine.SetFunction("log", new Jint.Delegates.Action<object>(Debug.Log));
                 
                 // Execute each AI
-                e.playerAI.engine.CallFunction("AI.OnGameTick");
+                e.playerAI.engine.CallFunction("OnGameTick", "TEST");
                 
                 // Execute AI Actions on Game   
             }

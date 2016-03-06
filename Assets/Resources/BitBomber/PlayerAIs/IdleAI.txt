@@ -1,5 +1,3 @@
-var AI = {
-    OnGameTick : function (ev) {
-        // Do nothing
-    }
+function OnGameTick (ev) {
+    log("Idle");
 };
