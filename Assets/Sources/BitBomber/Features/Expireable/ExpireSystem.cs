@@ -1,6 +1,4 @@
 using Entitas;
-using System.Collections.Generic;
-using Jint;
 using UnityEngine;
 
 namespace BitBots.BitBomber.Features.Expireable
@@ -28,8 +26,8 @@ namespace BitBots.BitBomber.Features.Expireable
             foreach (var e in _expireables.GetEntities())
             {
                 var remainingTicks = e.expireable.remainingTicksToLive - 1;
-                
-                if (0 <= remainingTicks)
+
+                if (remainingTicks <= 0)
                 {
                     e.IsDestroyable(true);
                     continue;
