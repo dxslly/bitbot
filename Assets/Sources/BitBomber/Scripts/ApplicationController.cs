@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿using BitBots.BitBomber.Features.View;
+using BitBots.BitBomber.Features.Tiles;
+
 using Entitas;
 using Entitas.Unity.VisualDebugging;
+
+using UnityEngine;
 
 namespace BitBots.BitBomber
 {
@@ -24,10 +28,15 @@ namespace BitBots.BitBomber
         private Systems CreateSystems(Pool pool)
         {
             #if (UNITY_EDITOR)
-            return new DebugSystems();
+            return new DebugSystems()
             #else
-            return new Systems();
+            return new Systems()
             #endif
+                // Views
+                .Add(pool.CreateSystem<AddPrefabSystem>())
+                .Add(pool.CreateSystem<AddViewSystem>())
+                .Add(pool.CreateSystem<ViewContainerSystem>())
+                .Add(pool.CreateSystem<RemoveViewSystem>());
         }
     }
 }

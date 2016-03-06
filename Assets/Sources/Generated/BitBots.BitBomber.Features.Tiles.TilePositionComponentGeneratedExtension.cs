@@ -2,13 +2,13 @@ using Entitas;
 
 namespace Entitas {
     public partial class Entity {
-        public BitBomber.Features.Tiles.TilePositionComponent tilePosition { get { return (BitBomber.Features.Tiles.TilePositionComponent)GetComponent(CoreComponentIds.TilePosition); } }
+        public BitBots.BitBomber.Features.Tiles.TilePositionComponent tilePosition { get { return (BitBots.BitBomber.Features.Tiles.TilePositionComponent)GetComponent(CoreComponentIds.TilePosition); } }
 
         public bool hasTilePosition { get { return HasComponent(CoreComponentIds.TilePosition); } }
 
         public Entity AddTilePosition(int newX, int newY) {
             var componentPool = GetComponentPool(CoreComponentIds.TilePosition);
-            var component = (BitBomber.Features.Tiles.TilePositionComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBomber.Features.Tiles.TilePositionComponent());
+            var component = (BitBots.BitBomber.Features.Tiles.TilePositionComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Tiles.TilePositionComponent());
             component.x = newX;
             component.y = newY;
             return AddComponent(CoreComponentIds.TilePosition, component);
@@ -16,7 +16,7 @@ namespace Entitas {
 
         public Entity ReplaceTilePosition(int newX, int newY) {
             var componentPool = GetComponentPool(CoreComponentIds.TilePosition);
-            var component = (BitBomber.Features.Tiles.TilePositionComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBomber.Features.Tiles.TilePositionComponent());
+            var component = (BitBots.BitBomber.Features.Tiles.TilePositionComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Tiles.TilePositionComponent());
             component.x = newX;
             component.y = newY;
             ReplaceComponent(CoreComponentIds.TilePosition, component);

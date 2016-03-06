@@ -1,6 +1,6 @@
 using Entitas;
 
-namespace BitBomber.Features.Tiles
+namespace BitBots.BitBomber.Features.Tiles
 {
     [Core]
     public class TilePositionComponent : IComponent
