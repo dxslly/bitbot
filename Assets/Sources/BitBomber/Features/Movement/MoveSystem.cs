@@ -29,12 +29,20 @@ namespace BitBots.BitBomber.Features.Movement
             foreach (var e in entities)
             {
                 // Attempt to move player
-                Entity[,] grid = _pool.gameBoardCache.grid;
-                
                 int targetX = e.tilePosition.x;
                 int targetY = e.tilePosition.y;
                 
-                switch (e.move.moveDirection)
+                MoveDirection direction = e.move.moveDirection;
+                e.RemoveMove();
+                
+                // Ensure moveDirection is non-none
+                if (MoveDirection.None == direction)
+                {
+                    continue;
+                }
+                
+                // Determine goal position
+                switch (direction)
                 {
                 case MoveDirection.Down:
                     targetY -= 1;
@@ -50,13 +58,24 @@ namespace BitBots.BitBomber.Features.Movement
                     break;
                 }
                 
-                // Ensure target is within grid bounds
-                // if (targetX < 0 || targetX >= grid || targetY < 0 || targetY >= )
+                // Ensure is not moving out of bounds
+                var board = _pool.gameBoard;
+                if (targetX < 0 || targetX >= board.width || targetY < 0 || targetY >= board.height)
+                {
+                    continue;
+                }
                 
                 // Ensure that grid does not contain a collidable element
-                // grid[targetX, targetY]
+                Entity[,] grid = _pool.gameBoardCache.grid;
+                Entity boardElement = grid[targetX, targetY];
                 
-                e.RemoveMove();
+                // Ensure board elment exist and is non-collidable
+                if (null != boardElement && boardElement.isCollideable)
+                {
+                    continue;
+                }
+                
+                e.ReplaceTilePosition(targetX, targetY);
             }
         }
     }

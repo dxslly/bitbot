@@ -42,6 +42,9 @@ namespace BitBots.BitBomber.Features.GameBoard
             {
                 for (int y = 0; y < board.height; y++)
                 {
+                    // TODO(David): Enforce walkable tiles in corners
+                    
+                    // Ensure it is not an outside wall
                     if (x == 0 || x == rightColumn || y == 0 || y == topRow)
                     {
                         // Create Solid tile
@@ -53,7 +56,12 @@ namespace BitBots.BitBomber.Features.GameBoard
                         // Create walkable tile
                         _pool.CreateWalkableTile(x, y);
                     }
-                    // Ensure is not outside walls
+                    // Ensure not a post
+                    else if (0 == (x % 3) && 0 == (y % 3))
+                    {
+                        _pool.CreateSolidTitle(x, y);
+                    }
+                    // Otherwise do whatever
                     else
                     {
                         // Create walkable or destroyable tile

@@ -1,6 +1,7 @@
 using Entitas;
 using System.Collections.Generic;
 using Jint;
+using UnityEngine;
 using BitBots.BitBomber.Features.Movement;
 
 namespace BitBots.BitBomber.Features.PlayerAI
@@ -43,6 +44,8 @@ namespace BitBots.BitBomber.Features.PlayerAI
         
         private void MovePlayer(Entity entity, string movement)
         {
+            Debug.Log("Moving: " + entity.player.playerID + " " + movement);
+            
             MoveDirection moveDirection = movement.ToMoveDirection();
             
             if (entity.hasMove)
