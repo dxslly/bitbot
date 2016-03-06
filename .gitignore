@@ -1,0 +1,44 @@
+ty generated #
+# =============== #
+Temp/
+Library/
+
+# ================= #
+# Per user folders  #
+# ================= #
+Assets/Thirdparty/Personal
+!Assets/Thirdparty/Personal/.gitkeep
+Assets/Scenes/Personal
+!Assets/Scenes/Personal/.gitkeep
+
+# ============= #
+# Build Folders *
+# ============= #
+Builds/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+.vscode/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
