@@ -36,7 +36,10 @@ namespace BitBots.BitBomber
                 .Add(pool.CreateSystem<AddPrefabSystem>())
                 .Add(pool.CreateSystem<AddViewSystem>())
                 .Add(pool.CreateSystem<ViewContainerSystem>())
-                .Add(pool.CreateSystem<RemoveViewSystem>());
+                .Add(pool.CreateSystem<RemoveViewSystem>())
+                
+                // Tiles
+                .Add(pool.CreateSystem<RenderTilePositionSystem>());
         }
     }
 }
