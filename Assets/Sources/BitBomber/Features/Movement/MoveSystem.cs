@@ -58,19 +58,10 @@ namespace BitBots.BitBomber.Features.Movement
                     break;
                 }
                 
-                // Ensure is not moving out of bounds
+                // Ensure target cell is valid to move into
                 var board = _pool.gameBoard;
-                if (targetX < 0 || targetX >= board.width || targetY < 0 || targetY >= board.height)
-                {
-                    continue;
-                }
-                
-                // Ensure that grid does not contain a collidable element
-                Entity[,] grid = _pool.gameBoardCache.grid;
-                Entity boardElement = grid[targetX, targetY];
-                
-                // Ensure board elment exist and is non-collidable
-                if (null != boardElement && boardElement.isCollideable)
+                bool isValidMove = _pool.gameBoardCache.IsValidMoveCell(board, targetX, targetY);
+                if (!isValidMove)
                 {
                     continue;
                 }

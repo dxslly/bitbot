@@ -39,7 +39,7 @@ public static class CoreComponentIds {
         typeof(BitBots.BitBomber.Features.Bomb.BombComponent),
         typeof(BitBots.BitBomber.Features.Collideable.CollideableComponent),
         typeof(BitBots.BitBomber.Features.Damageable.DamageableComponent),
-        typeof(BitBots.BitBomber.Features.GameBoard.GameBoard),
+        typeof(BitBots.BitBomber.Features.GameBoard.GameBoardComponent),
         typeof(BitBots.BitBomber.Features.GameBoard.GameBoardCacheComponent),
         typeof(BitBots.BitBomber.Features.GameBoard.GameBoardElementComponent),
         typeof(BitBots.BitBomber.Features.GameTick.GameTickComponent),

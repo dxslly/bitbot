@@ -5,7 +5,7 @@ namespace BitBots.BitBomber.Features.GameBoard
 {
     [CoreAttribute]
     [SingleEntity]
-    public class GameBoard : IComponent
+    public class GameBoardComponent : IComponent
     {
         public int width;
         public int height;

@@ -2,13 +2,13 @@ using Entitas;
 
 namespace Entitas {
     public partial class Entity {
-        public BitBots.BitBomber.Features.GameBoard.GameBoard gameBoard { get { return (BitBots.BitBomber.Features.GameBoard.GameBoard)GetComponent(CoreComponentIds.GameBoard); } }
+        public BitBots.BitBomber.Features.GameBoard.GameBoardComponent gameBoard { get { return (BitBots.BitBomber.Features.GameBoard.GameBoardComponent)GetComponent(CoreComponentIds.GameBoard); } }
 
         public bool hasGameBoard { get { return HasComponent(CoreComponentIds.GameBoard); } }
 
         public Entity AddGameBoard(int newWidth, int newHeight) {
             var componentPool = GetComponentPool(CoreComponentIds.GameBoard);
-            var component = (BitBots.BitBomber.Features.GameBoard.GameBoard)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.GameBoard.GameBoard());
+            var component = (BitBots.BitBomber.Features.GameBoard.GameBoardComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.GameBoard.GameBoardComponent());
             component.width = newWidth;
             component.height = newHeight;
             return AddComponent(CoreComponentIds.GameBoard, component);
@@ -16,7 +16,7 @@ namespace Entitas {
 
         public Entity ReplaceGameBoard(int newWidth, int newHeight) {
             var componentPool = GetComponentPool(CoreComponentIds.GameBoard);
-            var component = (BitBots.BitBomber.Features.GameBoard.GameBoard)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.GameBoard.GameBoard());
+            var component = (BitBots.BitBomber.Features.GameBoard.GameBoardComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.GameBoard.GameBoardComponent());
             component.width = newWidth;
             component.height = newHeight;
             ReplaceComponent(CoreComponentIds.GameBoard, component);
@@ -31,7 +31,7 @@ namespace Entitas {
     public partial class Pool {
         public Entity gameBoardEntity { get { return GetGroup(CoreMatcher.GameBoard).GetSingleEntity(); } }
 
-        public BitBots.BitBomber.Features.GameBoard.GameBoard gameBoard { get { return gameBoardEntity.gameBoard; } }
+        public BitBots.BitBomber.Features.GameBoard.GameBoardComponent gameBoard { get { return gameBoardEntity.gameBoard; } }
 
         public bool hasGameBoard { get { return gameBoardEntity != null; } }
 

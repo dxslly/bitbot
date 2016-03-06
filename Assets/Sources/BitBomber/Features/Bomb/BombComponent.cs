@@ -7,5 +7,6 @@ namespace BitBots.BitBomber.Features.Bomb
     public class BombComponent : IComponent
     {
         public int remainingFuseTime;
+        public int spread;
     }
 }
