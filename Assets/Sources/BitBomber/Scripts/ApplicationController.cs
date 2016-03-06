@@ -46,7 +46,8 @@ namespace BitBots.BitBomber
             pool.CreateEntity()
                 .AddTilePosition(0, 0)
                 .AddPlayer("Blue Player")
-                .AddPlayerAI(blueEngine);
+                .AddPlayerAI(blueEngine)
+                .AddPrefab(Res.bluePlayer);
         }
         
         private Systems CreateSystems(Pool pool)

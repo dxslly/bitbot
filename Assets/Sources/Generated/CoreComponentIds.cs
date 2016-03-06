@@ -5,13 +5,14 @@ public static class CoreComponentIds {
     public const int GameBoardElement = 3;
     public const int GameTick = 4;
     public const int Health = 5;
-    public const int PlayerAI = 6;
-    public const int Player = 7;
-    public const int Prefab = 8;
-    public const int TilePosition = 9;
-    public const int View = 10;
+    public const int Move = 6;
+    public const int PlayerAI = 7;
+    public const int Player = 8;
+    public const int Prefab = 9;
+    public const int TilePosition = 10;
+    public const int View = 11;
 
-    public const int TotalComponents = 11;
+    public const int TotalComponents = 12;
 
     public static readonly string[] componentNames = {
         "Collideable",
@@ -20,6 +21,7 @@ public static class CoreComponentIds {
         "GameBoardElement",
         "GameTick",
         "Health",
+        "Move",
         "PlayerAI",
         "Player",
         "Prefab",
@@ -34,6 +36,7 @@ public static class CoreComponentIds {
         typeof(BitBots.BitBomber.Features.GameBoard.GameBoardElementComponent),
         typeof(BitBots.BitBomber.Features.GameTick.GameTickComponent),
         typeof(BitBots.BitBomber.Features.Damageable.HealthComponent),
+        typeof(BitBots.BitBomber.Features.Movement.MoveComponent),
         typeof(BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent),
         typeof(BitBots.BitBomber.Features.Player.PlayerComponent),
         typeof(BitBots.BitBomber.Features.View.PrefabComponent),

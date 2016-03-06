@@ -1,11 +1,10 @@
 using Entitas;
 using System.Collections.Generic;
-using UnityEngine;
 using Jint;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
-    public class ExecuteAIOnGameTickSystem : ISetPool, IInitializeSystem
+    public class ExecuteAIOnGameTickSystem : ISetPool, IReactiveSystem
     {
         private JintEngine jintEngine = new JintEngine();
         private Group _aiPlayers;
@@ -18,22 +17,31 @@ namespace BitBots.BitBomber.Features.PlayerAI
             _aiPlayers = pool.GetGroup(Matcher.AllOf(CoreMatcher.PlayerAI, CoreMatcher.Player));
         }
         
-        public void Initialize()
+        public TriggerOnEvent trigger
         {
+            get { return CoreMatcher.PlayerAI.OnEntityAdded(); }
+        }
+        
+        public void Execute(List<Entity> entities)
+        {
+            foreach (var e in entities)
+            {
+                // Add Hooks to PlayerAI
+                e.playerAI.engine.SetFunction("move", new Jint.Delegates.Action<string>((movement) => MovePlayer(e, movement)));
+            }
         }
         
         private void OnGameTick()
         {
             foreach (var e in _aiPlayers.GetEntities())
             {
-                // Create Event
-                e.playerAI.engine.SetFunction("log", new Jint.Delegates.Action<object>(Debug.Log));
-                
                 // Execute each AI
                 e.playerAI.engine.CallFunction("OnGameTick", "TEST");
-                
-                // Execute AI Actions on Game   
             }
+        }
+        
+        private void MovePlayer(Entity entity, string movement)
+        {
         }
     }
 }
