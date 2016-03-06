@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using Jint;
 using UnityEngine;
 using BitBots.BitBomber.Features.Movement;
+using BitBots.BitBomber.Features.Bomb;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
     public class ExecuteAIOnGameTickSystem : ISetPool, IReactiveSystem
     {
+        private Pool _pool;
         private Group _aiPlayers;
         
         public void SetPool(Pool pool)
         {
+            _pool = pool;
+            
             var gameTick = pool.GetGroup(CoreMatcher.GameTick);
             gameTick.OnEntityAdded += ((group, entity, index, component) => OnGameTick());
             
@@ -29,6 +33,7 @@ namespace BitBots.BitBomber.Features.PlayerAI
             {
                 // Add Hooks to PlayerAI
                 e.playerAI.engine.SetFunction("move", new Jint.Delegates.Action<string>((movement) => MovePlayer(e, movement)));
+                e.playerAI.engine.SetFunction("placeBomb", new Jint.Delegates.Action(() => PlaceBomb(e)));
             }
         }
         
@@ -36,8 +41,6 @@ namespace BitBots.BitBomber.Features.PlayerAI
         {
             foreach (var e in _aiPlayers.GetEntities())
             {
-                Debug.Log("OnTickPlayer: " + e.player.playerID);
-                
                 // Execute each AI
                 try
                 {
@@ -54,10 +57,10 @@ namespace BitBots.BitBomber.Features.PlayerAI
         
         private void MovePlayer(Entity entity, string movement)
         {
-            Debug.Log("Moving: " + entity.player.playerID + " " + movement);
+            // Debug.Log("Moving: " + entity.player.playerID + " " + movement);
             
             MoveDirection moveDirection = movement.ToMoveDirection();
-            
+
             if (entity.hasMove)
             {
                 entity.ReplaceMove(moveDirection);
@@ -66,6 +69,18 @@ namespace BitBots.BitBomber.Features.PlayerAI
             {
                 entity.AddMove(moveDirection);
             }
+        }
+        
+        private void PlaceBomb(Entity e)
+        {
+            var pos = e.tilePosition;
+            bool canPlaceBomb = BombLogic.CanPlaceBomb(e, pos.x, pos.y);
+            if (!canPlaceBomb)
+            {
+                return;
+            }
+            
+            _pool.CreateBomb(e, pos.x, pos.y, 5, 1);
         }
     }
 }

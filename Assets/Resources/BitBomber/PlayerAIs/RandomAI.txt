@@ -1,12 +1,18 @@
 function OnGameTick (ev) {
-    var val = Math.random();
+    var moveChance = Math.random();
     
-    if (val < 0.3)
+    if (moveChance < 0.3) {
         move("up");
-    else if (val < 0.6)
+    }
+    else if (moveChance < 0.6) {
         move("right");
-    else if (val < 0.8)
+    }
+    else if (moveChance < 0.8) {
         move("down");
-    else
+    }
+    else {
         move("left");
+    }
+    
+    placeBomb();
 };

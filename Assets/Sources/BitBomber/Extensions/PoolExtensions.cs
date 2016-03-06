@@ -42,12 +42,13 @@ namespace BitBots.BitBomber
                 .AddPrefab(_solidTiles[Random.Range(0, _solidTiles.Length)]);
         }
         
-        public static Entity CreateBomb(this Pool pool, int x, int y, int fuseTime, int spread)
+        public static Entity CreateBomb(this Pool pool, Entity owner, int x, int y, int fuseTime, int spread)
         {
             return pool.CreateEntity()
                 .AddBomb(fuseTime, spread)
                 .AddPrefab("BitBomber/Prefabs/Bombs/DefaultBomb")
-                .AddTilePosition(x, y);
+                .AddTilePosition(x, y)
+                .AddOwner(owner);
         }
         
         public static Entity CreateAIPlayer(this Pool pool, int x, int y, PlayerColor color, string aiScriptPath)
