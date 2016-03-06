@@ -5,6 +5,7 @@ using BitBots.BitBomber.Features.GameTick;
 using BitBots.BitBomber.Features.PlayerAI;
 using BitBots.BitBomber.Features.Player;
 using BitBots.BitBomber.Features.Movement;
+using BitBots.BitBomber.Features.Bomb;
 using Entitas;
 using Entitas.Unity.VisualDebugging;
 using UnityEngine;
@@ -63,7 +64,10 @@ namespace BitBots.BitBomber
                 .Add(pool.CreateSystem<ExecuteAIOnGameTickSystem>())
                 
                 // Movement
-                .Add(pool.CreateSystem<MoveSystem>());
+                .Add(pool.CreateSystem<MoveSystem>())
+                
+                // Bomb
+                .Add(pool.CreateSystem<TickBombFuseSystem>());
         }
     }
 }
