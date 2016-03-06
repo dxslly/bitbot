@@ -1,11 +1,11 @@
 using Entitas;
-using Entitas.CodeGenerator;
+using Jint;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
     [CoreAttribute]
     public class PlayerAIComponent : IComponent
     {
-        public IPlayerAI playerID;
+        public JintEngine engine;
     }
 }

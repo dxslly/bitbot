@@ -6,17 +6,17 @@ namespace Entitas {
 
         public bool hasPlayerAI { get { return HasComponent(CoreComponentIds.PlayerAI); } }
 
-        public Entity AddPlayerAI(BitBots.BitBomber.Features.PlayerAI.IPlayerAI newPlayerID) {
+        public Entity AddPlayerAI(Jint.JintEngine newEngine) {
             var componentPool = GetComponentPool(CoreComponentIds.PlayerAI);
             var component = (BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent());
-            component.playerID = newPlayerID;
+            component.engine = newEngine;
             return AddComponent(CoreComponentIds.PlayerAI, component);
         }
 
-        public Entity ReplacePlayerAI(BitBots.BitBomber.Features.PlayerAI.IPlayerAI newPlayerID) {
+        public Entity ReplacePlayerAI(Jint.JintEngine newEngine) {
             var componentPool = GetComponentPool(CoreComponentIds.PlayerAI);
             var component = (BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent());
-            component.playerID = newPlayerID;
+            component.engine = newEngine;
             ReplaceComponent(CoreComponentIds.PlayerAI, component);
             return this;
         }

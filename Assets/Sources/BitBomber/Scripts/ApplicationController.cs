@@ -2,10 +2,10 @@
 using BitBots.BitBomber.Features.Tiles;
 using BitBots.BitBomber.Features.View;
 using BitBots.BitBomber.Features.GameTick;
-
+using BitBots.BitBomber.Features.PlayerAI;
 using Entitas;
 using Entitas.Unity.VisualDebugging;
-
+using Jint;
 using UnityEngine;
 
 namespace BitBots.BitBomber
@@ -20,11 +20,33 @@ namespace BitBots.BitBomber
             Random.seed = 42;
             _coreSystems = CreateSystems(Pools.core);
             _coreSystems.Initialize();
+            
+            CreateAI(Pools.core);
         }
         
         private void Update()
         {
             _coreSystems.Execute();
+        }
+        
+        private void CreateAI(Pool pool)
+        {
+            // Load AI From
+            TextAsset textAsset = Resources.Load<TextAsset>("BitBomber/PlayerAIs/IdleAI");
+            if (null == textAsset)
+            {
+                Debug.LogWarning("Unable to load AI Script");
+                return;
+            }
+            
+            JintEngine blueEngine = new JintEngine();
+            blueEngine.Run(textAsset.text);
+            
+            // Blue Player
+            pool.CreateEntity()
+                .AddTilePosition(0, 0)
+                .AddPlayer("Blue Player")
+                .AddPlayerAI(blueEngine);
         }
         
         private Systems CreateSystems(Pool pool)
@@ -46,8 +68,11 @@ namespace BitBots.BitBomber
                 // Tiles
                 .Add(pool.CreateSystem<RenderTilePositionSystem>())
                 
-                // Execute GameTick
-                .Add(pool.CreateSystem<ExecuteGameTickSystem>());
+                // GameTick
+                .Add(pool.CreateSystem<ExecuteGameTickSystem>())
+                
+                // AI
+                .Add(pool.CreateSystem<ExecuteAIOnGameTickSystem>());
         }
     }
 }
