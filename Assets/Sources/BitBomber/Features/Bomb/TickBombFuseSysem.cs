@@ -33,7 +33,7 @@ namespace BitBots.BitBomber.Features.Bomb
                 if (0 == newFuseTime)
                 {
                     // Create Explosion
-                    CreateExplosion(e);
+                    CreateCardinalExplosion(e);
                     e.destroy();
                 }
                 else
@@ -43,16 +43,35 @@ namespace BitBots.BitBomber.Features.Bomb
             }
         }
         
-        private void CreateExplosion(Entity e)
+        private void CreateCardinalExplosion(Entity e)
         {
             var spread = e.bomb.spread;
             var pos = e.tilePosition;
-            var grid = _pool.gameBoardCache;
             
-            // Left
-            for (int i = 0; i < spread; i++)
+            // Cardinal directions
+            
+            ExploadInDirection(e, spread, pos.x, pos.y, -1, 0);
+            ExploadInDirection(e, spread, pos.x, pos.y, 1, 0);
+            ExploadInDirection(e, spread, pos.x, pos.y, 0, 1);
+            ExploadInDirection(e, spread, pos.x, pos.y, 0, -1);
+        }
+        
+        private void ExploadInDirection(Entity e, int depth, int startX, int startY, int deltaX, int deltaY)
+        {
+            var grid = _pool.gameBoardCache;
+            var board = _pool.gameBoard;
+            
+            for (int i = 0; i < depth; i++)
             {
-                // Create Explosion
+                int x = startX + deltaX;
+                int y = startY + deltaY;
+                
+                if (!grid.IsValidMoveCell(board, x, y))
+                {
+                    break;
+                }
+                
+                // Create explosion
             }
         }
     }
