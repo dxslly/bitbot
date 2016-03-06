@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.Tiles
 {
-    class RenderTilePositionSystem : IReactiveSystem
+    public class RenderTilePositionSystem : IReactiveSystem
     {
         public TriggerOnEvent trigger
         {

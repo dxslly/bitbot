@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.View
 {
-    class AddPrefabSystem : IReactiveSystem
+    public class AddPrefabSystem : IReactiveSystem
     {
         public TriggerOnEvent trigger
         {

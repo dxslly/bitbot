@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.GameBoard
 {
-    class CreateGameBoardSystem : IInitializeSystem
+    public class CreateGameBoardSystem : IInitializeSystem
     {
         public void Initialize()
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.GameBoard
 {
-    class CreateGameBoardCacheSystem : IInitializeSystem, IReactiveSystem, ISetPool
+    public class CreateGameBoardCacheSystem : IInitializeSystem, IReactiveSystem, ISetPool
     {
         public void SetPool(Pool pool)
         {}

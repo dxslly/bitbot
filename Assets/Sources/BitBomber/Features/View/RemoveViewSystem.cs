@@ -2,7 +2,7 @@
 
 namespace BitBots.BitBomber.Features.View
 {
-    class RemoveViewSystem : ISetPool, ISystem
+    public class RemoveViewSystem : ISetPool, ISystem
     {
         private Group _views;
 
