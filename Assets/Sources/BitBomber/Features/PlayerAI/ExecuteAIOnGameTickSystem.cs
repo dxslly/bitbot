@@ -1,6 +1,5 @@
 using Entitas;
 using System.Collections.Generic;
-using Jint;
 using UnityEngine;
 using BitBots.BitBomber.Features.Movement;
 using BitBots.BitBomber.Features.Bomb;
@@ -74,7 +73,7 @@ namespace BitBots.BitBomber.Features.PlayerAI
         private void PlaceBomb(Entity e)
         {
             var pos = e.tilePosition;
-            bool canPlaceBomb = BombLogic.CanPlaceBomb(e, pos.x, pos.y);
+           bool canPlaceBomb = BombLogic.CanPlaceBomb(e, pos.x, pos.y);
             if (!canPlaceBomb)
             {
                 return;

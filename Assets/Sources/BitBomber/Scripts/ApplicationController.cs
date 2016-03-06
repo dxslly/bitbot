@@ -6,6 +6,8 @@ using BitBots.BitBomber.Features.PlayerAI;
 using BitBots.BitBomber.Features.Player;
 using BitBots.BitBomber.Features.Movement;
 using BitBots.BitBomber.Features.Bomb;
+using BitBots.BitBomber.Features.Expireable;
+using BitBots.BitBomber.Features.Destroyable;
 using Entitas;
 using Entitas.Unity.VisualDebugging;
 using UnityEngine;
@@ -66,8 +68,14 @@ namespace BitBots.BitBomber
                 // Movement
                 .Add(pool.CreateSystem<MoveSystem>())
                 
+                // Expirable
+                .Add(pool.CreateSystem<ExpireSystem>())
+                
                 // Bomb
-                .Add(pool.CreateSystem<TickBombFuseSystem>());
+                .Add(pool.CreateSystem<ExplodeBombSysem>())
+                
+                // Destroyable
+                .Add(pool.CreateSystem<DestroySystem>());
         }
     }
 }

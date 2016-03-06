@@ -37,7 +37,7 @@ namespace Entitas {
 
         public Entity SetGameBoard(int newWidth, int newHeight) {
             if (hasGameBoard) {
-                throw new EntitasException("Could not set gameBoard!\n" + this + " already has an entity with BitBots.BitBomber.Features.GameBoard.GameBoard!",
+                throw new EntitasException("Could not set gameBoard!\n" + this + " already has an entity with BitBots.BitBomber.Features.GameBoard.GameBoardComponent!",
                     "You should check if the pool already has a gameBoardEntity before setting it or use pool.ReplaceGameBoard().");
             }
             var entity = CreateEntity();

@@ -6,18 +6,16 @@ namespace Entitas {
 
         public bool hasBomb { get { return HasComponent(CoreComponentIds.Bomb); } }
 
-        public Entity AddBomb(int newRemainingFuseTime, int newSpread) {
+        public Entity AddBomb(int newSpread) {
             var componentPool = GetComponentPool(CoreComponentIds.Bomb);
             var component = (BitBots.BitBomber.Features.Bomb.BombComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Bomb.BombComponent());
-            component.remainingFuseTime = newRemainingFuseTime;
             component.spread = newSpread;
             return AddComponent(CoreComponentIds.Bomb, component);
         }
 
-        public Entity ReplaceBomb(int newRemainingFuseTime, int newSpread) {
+        public Entity ReplaceBomb(int newSpread) {
             var componentPool = GetComponentPool(CoreComponentIds.Bomb);
             var component = (BitBots.BitBomber.Features.Bomb.BombComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Bomb.BombComponent());
-            component.remainingFuseTime = newRemainingFuseTime;
             component.spread = newSpread;
             ReplaceComponent(CoreComponentIds.Bomb, component);
             return this;

@@ -42,12 +42,22 @@ namespace BitBots.BitBomber
                 .AddPrefab(_solidTiles[Random.Range(0, _solidTiles.Length)]);
         }
         
+        public static Entity CreateExplosion(this Pool pool, int x, int y)
+        {
+            return pool.CreateEntity()
+                .AddTilePosition(x, y)
+                .AddDamager(1)
+                .AddExpireable(3)
+                .AddPrefab("BitBomber/Prefabs/Bombs/Explosion");
+        }
+        
         public static Entity CreateBomb(this Pool pool, Entity owner, int x, int y, int fuseTime, int spread)
         {
             return pool.CreateEntity()
-                .AddBomb(fuseTime, spread)
+                .AddBomb(spread)
                 .AddPrefab("BitBomber/Prefabs/Bombs/DefaultBomb")
                 .AddTilePosition(x, y)
+                .AddExpireable(fuseTime)
                 .AddOwner(owner);
         }
         
@@ -74,6 +84,7 @@ namespace BitBots.BitBomber
             
             Entity e = pool.CreateEntity()
                 .AddTilePosition(x, y)
+                .AddHealth(1)
                 .AddPlayerAI(engine);
                 
             string prefabPath = "NoPath";

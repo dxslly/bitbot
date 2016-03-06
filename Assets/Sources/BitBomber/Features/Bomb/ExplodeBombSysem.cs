@@ -6,40 +6,25 @@ using BitBots.BitBomber.Features.Movement;
 
 namespace BitBots.BitBomber.Features.Bomb
 {
-    public class TickBombFuseSystem : ISetPool, IInitializeSystem
+    public class ExplodeBombSysem : ISetPool, IReactiveSystem
     {
-        private Group _bombs;
         private Pool _pool;
         
         public void SetPool(Pool pool)
         {
             _pool = pool;
-            
-            var gameTick = pool.GetGroup(CoreMatcher.GameTick);
-            gameTick.OnEntityAdded += ((group, entity, index, component) => OnGameTick());
-            
-            _bombs = pool.GetGroup(Matcher.AllOf(CoreMatcher.Bomb, CoreMatcher.TilePosition));
         }
         
-        public void Initialize()
-        {}
-        
-        private void OnGameTick()
+        public TriggerOnEvent trigger
         {
-            foreach (var e in _bombs.GetEntities())
+            get { return Matcher.AllOf(CoreMatcher.Bomb, CoreMatcher.Destroyable, CoreMatcher.TilePosition).OnEntityAdded(); }
+        }
+        
+        public void Execute(List<Entity> entities)
+        {
+            foreach (var e in entities)
             {
-                var newFuseTime = e.bomb.remainingFuseTime - 1;
-                
-                if (0 == newFuseTime)
-                {
-                    // Create Explosion
-                    CreateCardinalExplosion(e);
-                    e.destroy();
-                }
-                else
-                {
-                    e.ReplaceBomb(newFuseTime, e.bomb.spread);
-                }
+                CreateCardinalExplosion(e);
             }
         }
         
@@ -49,7 +34,7 @@ namespace BitBots.BitBomber.Features.Bomb
             var pos = e.tilePosition;
             
             // Cardinal directions
-            
+            _pool.CreateExplosion(pos.x, pos.y);
             ExploadInDirection(e, spread, pos.x, pos.y, -1, 0);
             ExploadInDirection(e, spread, pos.x, pos.y, 1, 0);
             ExploadInDirection(e, spread, pos.x, pos.y, 0, 1);
@@ -66,12 +51,13 @@ namespace BitBots.BitBomber.Features.Bomb
                 int x = startX + deltaX;
                 int y = startY + deltaY;
                 
+                // Ensure explosion may move into the next tile
                 if (!grid.IsValidMoveCell(board, x, y))
                 {
                     break;
                 }
                 
-                // Create explosion
+                _pool.CreateExplosion(x, y);
             }
         }
     }

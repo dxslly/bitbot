@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace BitBots.BitBomber.Features.View
 {
-    public class AddPrefabSystem : IReactiveSystem
+    public class AddPrefabSystem : IReactiveSystem, IEnsureComponents
     {
         public TriggerOnEvent trigger
         {
             get { return CoreMatcher.Prefab.OnEntityAdded(); }
         }
+        
+        public IMatcher ensureComponents { get { return CoreMatcher.Prefab; } }
 
         public void Execute(System.Collections.Generic.List<Entity> entities)
         {

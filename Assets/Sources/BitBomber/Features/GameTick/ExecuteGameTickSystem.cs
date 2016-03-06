@@ -6,7 +6,7 @@ namespace BitBots.BitBomber.Features.GameTick
     public class ExecuteGameTickSystem : IInitializeSystem, IExecuteSystem, ISetPool
     {
         private float _timeElapsedSinceLastTick = 0f;
-        private const float TICK_RATE = 0.8f;
+        private const float TICK_RATE = 2f;
         private Pool _pool;
         
         public void SetPool(Pool pool)
