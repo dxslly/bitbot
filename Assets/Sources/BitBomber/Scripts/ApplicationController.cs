@@ -33,15 +33,15 @@ namespace BitBots.BitBomber
         private void CreateAI(Pool pool)
         {
             // Load AI From
-            TextAsset textAsset = Resources.Load<TextAsset>("BitBomber/PlayerAIs/IdleAI");
-            if (null == textAsset)
+            TextAsset blueTextAsset = Resources.Load<TextAsset>("BitBomber/PlayerAIs/SimpleAI");
+            if (null == blueTextAsset)
             {
                 Debug.LogWarning("Unable to load AI Script");
                 return;
             }
             
             JintEngine blueEngine = new JintEngine();
-            blueEngine.Run(textAsset.text);
+            blueEngine.Run(blueTextAsset.text);
             
             // Blue Player
             pool.CreateEntity()
@@ -49,6 +49,23 @@ namespace BitBots.BitBomber
                 .AddPlayer("Blue Player")
                 .AddPlayerAI(blueEngine)
                 .AddPrefab(Res.bluePlayer);
+                
+            TextAsset redTextAsset = Resources.Load<TextAsset>("BitBomber/PlayerAIs/RandomAI");
+            if (null == redTextAsset)
+            {
+                Debug.LogWarning("Unable to load AI Script");
+                return;
+            }
+                
+            JintEngine redEngine = new JintEngine();
+            redEngine.Run(redTextAsset.text);
+            
+            // Red Player
+            pool.CreateEntity()
+                .AddTilePosition(8, 8)
+                .AddPlayer("Red Player")
+                .AddPlayerAI(redEngine)
+                .AddPrefab(Res.redPlayer);
         }
         
         private Systems CreateSystems(Pool pool)

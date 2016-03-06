@@ -8,7 +8,6 @@ namespace BitBots.BitBomber.Features.PlayerAI
 {
     public class ExecuteAIOnGameTickSystem : ISetPool, IReactiveSystem
     {
-        private JintEngine jintEngine = new JintEngine();
         private Group _aiPlayers;
         
         public void SetPool(Pool pool)
@@ -37,8 +36,18 @@ namespace BitBots.BitBomber.Features.PlayerAI
         {
             foreach (var e in _aiPlayers.GetEntities())
             {
+                Debug.Log("OnTickPlayer: " + e.player.playerID);
+                
                 // Execute each AI
-                e.playerAI.engine.CallFunction("OnGameTick", "TEST");
+                try
+                {
+                    e.playerAI.engine.CallFunction("OnGameTick", "TEST");
+                }
+                catch (System.Exception)
+                {
+                    // TODO(David): Track number of errors
+                    Debug.Log("Error Executing Bot: " + e.player.playerID);
+                }
             }
         }
         

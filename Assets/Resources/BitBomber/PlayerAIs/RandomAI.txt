@@ -1,0 +1,12 @@
+function OnGameTick (ev) {
+    var val = Math.random();
+    
+    if (val < 0.3)
+        move("up");
+    else if (val < 0.6)
+        move("right");
+    else if (val < 0.8)
+        move("down");
+    else
+        move("left");
+};
