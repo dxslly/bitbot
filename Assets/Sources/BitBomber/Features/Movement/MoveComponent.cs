@@ -5,6 +5,6 @@ namespace BitBots.BitBomber.Features.Movement
     [Core]
     public class MoveComponent : IComponent
     {
-        MoveDirection moveDirection;
+        public MoveDirection moveDirection;
     }
 }

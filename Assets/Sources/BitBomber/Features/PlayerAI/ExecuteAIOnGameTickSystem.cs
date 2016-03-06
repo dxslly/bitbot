@@ -1,6 +1,7 @@
 using Entitas;
 using System.Collections.Generic;
 using Jint;
+using BitBots.BitBomber.Features.Movement;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
@@ -42,6 +43,16 @@ namespace BitBots.BitBomber.Features.PlayerAI
         
         private void MovePlayer(Entity entity, string movement)
         {
+            MoveDirection moveDirection = movement.ToMoveDirection();
+            
+            if (entity.hasMove)
+            {
+                entity.ReplaceMove(moveDirection);
+            }
+            else
+            {
+                entity.AddMove(moveDirection);
+            }
         }
     }
 }

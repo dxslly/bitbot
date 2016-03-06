@@ -8,5 +8,6 @@ namespace BitBots.BitBomber.Features.Movement
         Right,
         Down,
         Left,
+        None,
     }
 }

@@ -2,24 +2,27 @@ using Entitas;
 
 namespace Entitas {
     public partial class Entity {
-        static readonly BitBots.BitBomber.Features.Movement.MoveComponent moveComponent = new BitBots.BitBomber.Features.Movement.MoveComponent();
+        public BitBots.BitBomber.Features.Movement.MoveComponent move { get { return (BitBots.BitBomber.Features.Movement.MoveComponent)GetComponent(CoreComponentIds.Move); } }
 
-        public bool isMove {
-            get { return HasComponent(CoreComponentIds.Move); }
-            set {
-                if (value != isMove) {
-                    if (value) {
-                        AddComponent(CoreComponentIds.Move, moveComponent);
-                    } else {
-                        RemoveComponent(CoreComponentIds.Move);
-                    }
-                }
-            }
+        public bool hasMove { get { return HasComponent(CoreComponentIds.Move); } }
+
+        public Entity AddMove(BitBots.BitBomber.Features.Movement.MoveDirection newMoveDirection) {
+            var componentPool = GetComponentPool(CoreComponentIds.Move);
+            var component = (BitBots.BitBomber.Features.Movement.MoveComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Movement.MoveComponent());
+            component.moveDirection = newMoveDirection;
+            return AddComponent(CoreComponentIds.Move, component);
         }
 
-        public Entity IsMove(bool value) {
-            isMove = value;
+        public Entity ReplaceMove(BitBots.BitBomber.Features.Movement.MoveDirection newMoveDirection) {
+            var componentPool = GetComponentPool(CoreComponentIds.Move);
+            var component = (BitBots.BitBomber.Features.Movement.MoveComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Movement.MoveComponent());
+            component.moveDirection = newMoveDirection;
+            ReplaceComponent(CoreComponentIds.Move, component);
             return this;
+        }
+
+        public Entity RemoveMove() {
+            return RemoveComponent(CoreComponentIds.Move);;
         }
     }
 }

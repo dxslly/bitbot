@@ -10,12 +10,18 @@ namespace BitBots.BitBomber
 {
     public static class PoolExtensions
     {
-
         static readonly string[] _walkableTiles = {
             Res.walkableTile01,
             Res.walkableTile02,
             Res.walkableTile03,
             Res.walkableTile04,
+        };
+        
+        static readonly string[] _solidTiles = {
+            Res.solidTile01,
+            Res.solidTile02,
+            Res.solidTile03,
+            Res.solidTile04,
         };
 
         public static Entity CreateWalkableTile(this Pool pool, int x, int y)
@@ -24,6 +30,15 @@ namespace BitBots.BitBomber
                 .AddTilePosition(x, y)
                 .IsGameBoardElement(true)
                 .AddPrefab(_walkableTiles[Random.Range(0, _walkableTiles.Length)]);
+        }
+        
+        public static Entity CreateSolidTitle(this Pool pool, int x, int y)
+        {
+            return pool.CreateEntity()
+                .AddTilePosition(x, y)
+                .IsGameBoardElement(true)
+                .IsCollideable(true)
+                .AddPrefab(_solidTiles[Random.Range(0, _solidTiles.Length)]);
         }
         
         public static Entity CreatePlayer(this Pool pool, int x, int y, PlayerColor color)

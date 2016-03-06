@@ -59,6 +59,7 @@ namespace BitBots.BitBomber
             #endif
                 // Create GameBoard
                 .Add(pool.CreateSystem<CreateGameBoardSystem>())
+                .Add(pool.CreateSystem<CreateGameBoardCacheSystem>())
             
                 // Views
                 .Add(pool.CreateSystem<AddPrefabSystem>())
