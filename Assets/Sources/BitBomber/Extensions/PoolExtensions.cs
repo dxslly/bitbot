@@ -1,11 +1,11 @@
 using Entitas;
 using UnityEngine;
-using Jint;
-
 using BitBots.BitBomber.Features.View;
 using BitBots.BitBomber.Features.Tiles;
 using BitBots.BitBomber.Features.GameBoard;
 using BitBots.BitBomber.Features.Player;
+using BitBots.BitBomber.Features.PlayerAI;
+using BitBots.BitBomber.Features.Synchronized;
 
 namespace BitBots.BitBomber
 {
@@ -24,6 +24,16 @@ namespace BitBots.BitBomber
             Res.solidTile03,
             Res.solidTile04,
         };
+
+        public static Entity GetEntityById(this Pool pool, int id)
+        {
+            foreach(var e in Pools.core.GetEntities(CoreMatcher.Synchronized))
+            {
+                if (e.synchronized.id == id)
+                    return e;
+            }
+            return null;
+        }
 
         public static Entity CreateWalkableTile(this Pool pool, int x, int y)
         {
@@ -58,51 +68,37 @@ namespace BitBots.BitBomber
                 .AddPrefab("BitBomber/Prefabs/Bombs/DefaultBomb")
                 .AddTilePosition(x, y)
                 .AddExpireable(fuseTime)
-                .AddOwner(owner);
+                .AddOwner(owner)
+                .AddSynchronized(EntityType.Bomb);
         }
         
-        public static Entity CreateAIPlayer(this Pool pool, int x, int y, PlayerColor color, string aiScriptPath)
+        public static Entity CreateAIPlayer(this Pool pool, int id, int x, int y, PlayerColor color, string aiScript)
         {
-            // Ensure Script Exist
-            TextAsset textAsset = Resources.Load<TextAsset>(aiScriptPath);
-            if (null == textAsset)
-            {
-                Debug.LogWarning("Unable to load AI Script");
-                return null;
-            }
-            
             // Ensure Script does not have error
-            string jintErrors = "";
-            if (JintEngine.HasErrors(textAsset.text, out jintErrors))
-            {
-                Debug.LogWarning("Bot script located at '" + aiScriptPath + "' contains the following errors:\n" + jintErrors);
-                // TODO(David): For now we will continue, later do not
-            }
-            
-            JintEngine engine = new JintEngine();
-            engine.Run(textAsset.text);
+            // TODO add timeout, this will execute anything outside functions
+            var engine = new BLScript();
+            engine.LoadScript(aiScript);
             
             Entity e = pool.CreateEntity()
                 .AddTilePosition(x, y)
                 .IsDamageable(true)
                 .AddHealth(1)
-                .AddPlayerAI(engine);
+                .AddPlayer(id)
+                .AddPlayerAI(engine)
+                .AddSynchronized(EntityType.Player);
+
                 
             string prefabPath = "NoPath";
-            string name = "Name";
             switch (color)
             {
             case PlayerColor.Red:
                 prefabPath = Res.redPlayer;
-                name = "Red";
                 break;
             case PlayerColor.Blue:
                 prefabPath = Res.bluePlayer;
-                name = "Blue";
                 break;
             }
             
-            e.AddPlayer(name);
             e.AddPrefab(prefabPath);
             
             return e;

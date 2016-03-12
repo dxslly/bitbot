@@ -15,10 +15,11 @@ public static class CoreComponentIds {
     public const int PlayerAI = 13;
     public const int Player = 14;
     public const int Prefab = 15;
-    public const int TilePosition = 16;
-    public const int View = 17;
+    public const int Synchronized = 16;
+    public const int TilePosition = 17;
+    public const int View = 18;
 
-    public const int TotalComponents = 18;
+    public const int TotalComponents = 19;
 
     public static readonly string[] componentNames = {
         "Bomb",
@@ -37,6 +38,7 @@ public static class CoreComponentIds {
         "PlayerAI",
         "Player",
         "Prefab",
+        "Synchronized",
         "TilePosition",
         "View"
     };
@@ -58,6 +60,7 @@ public static class CoreComponentIds {
         typeof(BitBots.BitBomber.Features.PlayerAI.PlayerAIComponent),
         typeof(BitBots.BitBomber.Features.Player.PlayerComponent),
         typeof(BitBots.BitBomber.Features.View.PrefabComponent),
+        typeof(BitBots.BitBomber.Features.Synchronized.SynchronizedComponent),
         typeof(BitBots.BitBomber.Features.Tiles.TilePositionComponent),
         typeof(BitBots.BitBomber.Features.View.ViewComponent)
     };

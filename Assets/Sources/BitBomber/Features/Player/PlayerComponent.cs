@@ -6,6 +6,6 @@ namespace BitBots.BitBomber.Features.Player
     [CoreAttribute]
     public class PlayerComponent : IComponent
     {
-        public string playerID;
+        public int playerID;
     }
 }

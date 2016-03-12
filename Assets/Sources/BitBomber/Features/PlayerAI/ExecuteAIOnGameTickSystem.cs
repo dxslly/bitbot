@@ -7,37 +7,21 @@ using System.Linq;
 
 namespace BitBots.BitBomber.Features.PlayerAI
 {
-    public class ExecuteAIOnGameTickSystem : ISetPool, IReactiveSystem
+    public class ExecuteAIOnGameTickSystem : ISetPool, ISystem
     {
         private Pool _pool;
         private Group _aiPlayers;
-        
+
         public void SetPool(Pool pool)
         {
             _pool = pool;
-            
+
             var gameTick = pool.GetGroup(CoreMatcher.GameTick);
             gameTick.OnEntityAdded += ((group, entity, index, component) => OnGameTick());
-            
+
             _aiPlayers = pool.GetGroup(Matcher.AllOf(CoreMatcher.PlayerAI, CoreMatcher.Player));
         }
-        
-        public TriggerOnEvent trigger
-        {
-            get { return CoreMatcher.PlayerAI.OnEntityAdded(); }
-        }
-        
-        public void Execute(List<Entity> entities)
-        {
-            foreach (var e in entities)
-            {
-                // Add Hooks to PlayerAI
-                e.playerAI.engine.SetFunction("log", new Jint.Delegates.Action<object>(Debug.Log));
-                e.playerAI.engine.SetFunction("move", new Jint.Delegates.Action<string>((movement) => MovePlayer(e, movement)));
-                e.playerAI.engine.SetFunction("placeBomb", new Jint.Delegates.Action(() => PlaceBomb(e)));
-            }
-        }
-        
+
         private void OnGameTick()
         {
             foreach (var e in _aiPlayers.GetEntities())
@@ -45,7 +29,9 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 // Execute each AI
                 try
                 {
-                    e.playerAI.engine.CallFunction("OnGameTick");
+                    // TODO Timeout
+                    var cmd = (int)e.playerAI.engine.Script.Call(e.playerAI.engine.Script.Globals["OnGameTick"], 1).Number;
+                    ExecuteCommand(e, (Command)cmd);
                 }
                 catch (System.Exception exception)
                 {
@@ -55,12 +41,12 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 }
             }
         }
-        
+
         private int[] BuildAIGrid()
         {
             var width = _pool.gameBoard.width;
             var height = _pool.gameBoard.height;
-            
+
             var grid = _pool.gameBoardCache.grid;
             var aiGrid = new int[width * height];
             for (int x = 0; x < width; x++)
@@ -81,14 +67,14 @@ namespace BitBots.BitBomber.Features.PlayerAI
                     {
                         val = 0;
                     }
-                    
+
                     aiGrid[(x * width + y)] = val;
                 }
             }
-            
+
             return aiGrid;
         }
-        
+
         private List<Vector2> BuildPlayers(Entity player)
         {
             List<Vector2> players = new List<Vector2>();
@@ -98,18 +84,42 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 {
                     continue;
                 }
-                
+
                 players.Add(new Vector2(player.tilePosition.x, player.tilePosition.y));
             }
-            
+
             return players;
         }
-        
-        private void MovePlayer(Entity entity, string movement)
+        private void ExecuteCommand(Entity entity, Command cmd)
+        {
+            switch (cmd)
+            {
+                case Command.PlantBomb:
+                    PlaceBomb(entity);
+                    break;
+                case Command.MoveUp:
+                    MovePlayer(entity, MoveDirection.Up);
+                    break;
+                case Command.MoveDown:
+                    MovePlayer(entity, MoveDirection.Down);
+                    break;
+                case Command.MoveLeft:
+                    MovePlayer(entity, MoveDirection.Left);
+                    break;
+                case Command.MoveRight:
+                    MovePlayer(entity, MoveDirection.Right);
+                    break;
+                case Command.Nothing:
+                    // Do nothing
+                    break;
+                default:
+                    Debug.Log("User not moving");
+                    break;
+            }
+        }
+        private void MovePlayer(Entity entity, MoveDirection moveDirection)
         {
             // Debug.Log("Moving: " + entity.player.playerID + " " + movement);
-            
-            MoveDirection moveDirection = movement.ToMoveDirection();
 
             if (entity.hasMove)
             {
@@ -120,16 +130,16 @@ namespace BitBots.BitBomber.Features.PlayerAI
                 entity.AddMove(moveDirection);
             }
         }
-        
+
         private void PlaceBomb(Entity e)
         {
             var pos = e.tilePosition;
-           bool canPlaceBomb = BombLogic.CanPlaceBomb(e, pos.x, pos.y);
+            bool canPlaceBomb = BombLogic.CanPlaceBomb(e, pos.x, pos.y);
             if (!canPlaceBomb)
             {
                 return;
             }
-            
+
             _pool.CreateBomb(e, pos.x, pos.y, 5, 1);
         }
     }

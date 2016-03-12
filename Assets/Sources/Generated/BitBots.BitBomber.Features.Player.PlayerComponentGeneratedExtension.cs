@@ -6,14 +6,14 @@ namespace Entitas {
 
         public bool hasPlayer { get { return HasComponent(CoreComponentIds.Player); } }
 
-        public Entity AddPlayer(string newPlayerID) {
+        public Entity AddPlayer(int newPlayerID) {
             var componentPool = GetComponentPool(CoreComponentIds.Player);
             var component = (BitBots.BitBomber.Features.Player.PlayerComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Player.PlayerComponent());
             component.playerID = newPlayerID;
             return AddComponent(CoreComponentIds.Player, component);
         }
 
-        public Entity ReplacePlayer(string newPlayerID) {
+        public Entity ReplacePlayer(int newPlayerID) {
             var componentPool = GetComponentPool(CoreComponentIds.Player);
             var component = (BitBots.BitBomber.Features.Player.PlayerComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Player.PlayerComponent());
             component.playerID = newPlayerID;
