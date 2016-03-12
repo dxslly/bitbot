@@ -47,6 +47,8 @@ namespace BitBots.BitBomber
 
         public void Reset()
         {
+            foreach (var e in Pools.core.GetEntities(CoreMatcher.Synchronized))
+                _synchronizationSystem.RemoveEntity(e);
             _coreSystems.DeactivateReactiveSystems();
             Pools.core.Reset();
             _coreSystems = null;
@@ -82,20 +84,20 @@ namespace BitBots.BitBomber
         private void CreateAI(Pool pool)
         {
             var randomScript = @"function OnGameTick (ev)
-    moveChance = math.random();
+                moveChance = math.random();
     
-    if(moveChance < 0.1) then
-		return PlantBomb;
-	elseif (moveChance < 0.3) then
-		return MoveUp;
-    elseif (moveChance < 0.6) then
-		return MoveRight;
-    elseif (moveChance < 0.8) then
-		return MoveDown;
-    else
-		return MoveLeft;
-    end
-end";
+                if(moveChance < 0.1) then
+		            return PlantBomb;
+	            elseif (moveChance < 0.3) then
+		            return MoveUp;
+                elseif (moveChance < 0.6) then
+		            return MoveRight;
+                elseif (moveChance < 0.8) then
+		            return MoveDown;
+                else
+		            return MoveLeft;
+                end
+            end";
             pool.CreateAIPlayer(1, 1, 1, PlayerColor.Red, randomScript);
             pool.CreateAIPlayer(2, 8, 8, PlayerColor.Blue, randomScript);
         }
@@ -119,9 +121,10 @@ end";
                 .Add(pool.CreateSystem<RemoveViewSystem>())
                 // Tiles
                 .Add(pool.CreateSystem<RenderTilePositionSystem>())
-#endif
+#else
                 // Synchronization System (Server)
                 .Add(SynchronizationSystem)
+#endif
 
 
                 // GameTick

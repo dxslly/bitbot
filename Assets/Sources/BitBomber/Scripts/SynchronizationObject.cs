@@ -19,17 +19,6 @@ namespace BitBots.BitBomber
 #if !LOGIC_ONLY
     public class SynchronizationObject : MonoBehaviour
     {
-
-        // Use this for initialization
-        void Start()
-        {
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         public void RemoveEntity(int id)
         {
             // TODO
@@ -38,13 +27,15 @@ namespace BitBots.BitBomber
 
         public void UpdateComponent(int id, int componentId, Dictionary<string, object> values)
         {
-            Debug.LogWarning("Received broadcast: UpdateComponent");
+            Debug.LogWarning("Received broadcast: " + id +" UpdateComponent " + componentId);
             var e = Pools.core.GetEntityById(id);
             if (e == null)
-                ; // TODO trace
+                Debug.LogWarning("UpdateComponent cannot find entity: " + id);
             else
             {
-                e.GetComponent(componentId).SetValues(values);
+                var component = System.Activator.CreateInstance(CoreComponentIds.componentTypes[componentId]) as IComponent;
+                component.SetValues(values);
+                e.ReplaceComponent(componentId, component);
             }
         }
 
@@ -61,7 +52,6 @@ namespace BitBots.BitBomber
 
         public void broadcast(string str)
         {
-            Debug.LogWarning("Received broadcast: " + str);
             try
             {
                 var obj = new BroadcastMsg();
@@ -86,7 +76,6 @@ namespace BitBots.BitBomber
                     }
                 }
 
-                Debug.LogWarning("Parsed broadcast: MsgType: " + obj.MsgType);
                 if (obj.MsgType == BroadcastMsg.BroadcastMsgType.Add)
                     AddEntity(obj.id, obj.EntityType, obj.components);
                 else if (obj.MsgType == BroadcastMsg.BroadcastMsgType.Update)
@@ -104,28 +93,33 @@ namespace BitBots.BitBomber
         public void AddEntity(int id, BitBots.BitBomber.Features.Synchronized.EntityType type, Dictionary<int, Dictionary<string, object>> components)
         {
             Debug.LogWarning("Received broadcast: AddEntity");
-            var emptyScript = @"function OnGameTick (ev)
-    return Nothing;
-end";
-            Entity entity = null;
-            switch (type)
+            Entity entity = Pools.core.GetEntityById(id);
+            if (entity == null)
             {
-                case Features.Synchronized.EntityType.Player:
-                    entity = Pools.core.CreateAIPlayer(1, 2, 2, Features.Player.PlayerColor.Blue, emptyScript);
-                    Debug.LogWarning("AddEntity Added Player");
-                    break;
-                case Features.Synchronized.EntityType.Bomb:
-                    entity = Pools.core.CreateBomb(null, 0, 0, 0, 0);
-                    break;
+                switch (type)
+                {
+                    case Features.Synchronized.EntityType.Player:
+                        entity = Pools.core.CreateAIPlayer(1, 1, 1, Features.Player.PlayerColor.Blue, null);
+                        break;
+                    case Features.Synchronized.EntityType.Bomb:
+                        entity = Pools.core.CreateBomb(null, 0, 0, 0, 0);
+                        break;
 
-                default:
-                    Debug.LogWarning("AddEntity Invalid EntityType");
-                    // TODO trace
-                    break;
+                    default:
+                        Debug.LogWarning("AddEntity Invalid EntityType");
+                        // TODO trace
+                        break;
+                }
+                if (entity != null)
+                {
+                    if (entity.hasSynchronized)
+                        entity.synchronized.id = id;
+                    else
+                        entity.AddSynchronized(id, type);
+                }
             }
             if (entity != null)
             {
-                entity.synchronized.id = id;
                 foreach (var c in components)
                 {
                     var component = System.Activator.CreateInstance(CoreComponentIds.componentTypes[c.Key]) as IComponent;

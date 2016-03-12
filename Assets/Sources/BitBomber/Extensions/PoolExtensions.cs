@@ -72,20 +72,24 @@ namespace BitBots.BitBomber
                 .AddSynchronized(EntityType.Bomb);
         }
         
-        public static Entity CreateAIPlayer(this Pool pool, int id, int x, int y, PlayerColor color, string aiScript)
+        public static Entity CreateAIPlayer(this Pool pool, int playerId, int x, int y, PlayerColor color, string aiScript)
         {
-            // Ensure Script does not have error
-            // TODO add timeout, this will execute anything outside functions
-            var engine = new BLScript();
-            engine.LoadScript(aiScript);
-            
             Entity e = pool.CreateEntity()
                 .AddTilePosition(x, y)
                 .IsDamageable(true)
                 .AddHealth(1)
-                .AddPlayer(id)
-                .AddPlayerAI(engine)
+                .AddPlayer(playerId)
                 .AddSynchronized(EntityType.Player);
+
+            if(aiScript != null)
+            {
+                // Ensure Script does not have error
+                // TODO add timeout, this will execute anything outside functions
+                var engine = new BLScript();
+                engine.LoadScript(aiScript);
+                Debug.LogWarning("Script Loaded");
+                e.AddPlayerAI(engine);
+            }
 
                 
             string prefabPath = "NoPath";
@@ -98,7 +102,7 @@ namespace BitBots.BitBomber
                 prefabPath = Res.bluePlayer;
                 break;
             }
-            
+
             e.AddPrefab(prefabPath);
             
             return e;

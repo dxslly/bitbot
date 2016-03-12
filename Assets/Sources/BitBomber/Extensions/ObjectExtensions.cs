@@ -32,6 +32,7 @@ namespace BitBots.BitBomber
             return -1;
         }
 
+#if !LOGIC_ONLY
         public static void SetValues(this IComponent component, Dictionary<string, object> values)
         {
             try
@@ -40,15 +41,20 @@ namespace BitBots.BitBomber
                 {
                     if (values.ContainsKey(a.Name))
                     {
-                        a.SetValue(component, System.Convert.ChangeType(values[a.Name], a.FieldType));
+                        var val = System.Convert.ChangeType((values[a.Name] as SimpleJSON.JSONData).Value, a.FieldType);
+                        //Debug.LogWarningFormat("Set component {0} field {2} to {1}", component.GetType().Name, val, a.Name);
+                        a.SetValue(component, System.Convert.ChangeType(val, a.FieldType));
                     }
                 }
             }
-            catch
+            catch(System.Exception ex)
             {
                 // TODO trace
+                Debug.LogError("SetValues threw an exception");
+                Debug.Log(ex);
             }
         }
+#endif
         public static Dictionary<string, object> GetValues(this IComponent component)
         {
             var result = new Dictionary<string, object>();
