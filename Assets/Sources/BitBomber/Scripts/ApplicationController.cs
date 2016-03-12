@@ -47,8 +47,6 @@ namespace BitBots.BitBomber
 
         public void Reset()
         {
-            foreach (var e in Pools.core.GetEntities(CoreMatcher.Synchronized))
-                _synchronizationSystem.RemoveEntity(e);
             _coreSystems.DeactivateReactiveSystems();
             Pools.core.Reset();
             _coreSystems = null;
