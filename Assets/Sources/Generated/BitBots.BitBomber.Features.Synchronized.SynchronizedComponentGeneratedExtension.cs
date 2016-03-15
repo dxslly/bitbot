@@ -6,19 +6,17 @@ namespace Entitas {
 
         public bool hasSynchronized { get { return HasComponent(CoreComponentIds.Synchronized); } }
 
-        public Entity AddSynchronized(int newId, BitBots.BitBomber.Features.Synchronized.EntityType newType) {
+        public Entity AddSynchronized(int newId) {
             var componentPool = GetComponentPool(CoreComponentIds.Synchronized);
             var component = (BitBots.BitBomber.Features.Synchronized.SynchronizedComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Synchronized.SynchronizedComponent());
             component.id = newId;
-            component.Type = newType;
             return AddComponent(CoreComponentIds.Synchronized, component);
         }
 
-        public Entity ReplaceSynchronized(int newId, BitBots.BitBomber.Features.Synchronized.EntityType newType) {
+        public Entity ReplaceSynchronized(int newId) {
             var componentPool = GetComponentPool(CoreComponentIds.Synchronized);
             var component = (BitBots.BitBomber.Features.Synchronized.SynchronizedComponent)(componentPool.Count > 0 ? componentPool.Pop() : new BitBots.BitBomber.Features.Synchronized.SynchronizedComponent());
             component.id = newId;
-            component.Type = newType;
             ReplaceComponent(CoreComponentIds.Synchronized, component);
             return this;
         }

@@ -2,6 +2,7 @@
 using Entitas;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace BitBots.BitBomber.Assets.Sources.BitBomber.Features.Synchronized
 {
     public class SynchronizationSystem : ISetPool, ISystem
     {
+        public const int CREATE_ENTITY = 0;
+        public const int UPDATE_ENTITY = 1;
+        public const int REMOVE_ENTITY = 2;
         Group _group;
         public void SetPool(Pool pool)
         {
@@ -19,37 +23,63 @@ namespace BitBots.BitBomber.Assets.Sources.BitBomber.Features.Synchronized
             _group.OnEntityRemoved += _group_OnEntityRemoved;
         }
 
-        public delegate void EntityAddedEvent(int id, EntityType type, Dictionary<int, Dictionary<string, object>> components);
-        public event EntityAddedEvent OnEntityAdded;
-        public delegate void EntityRemovedEvent(int id);
-        public event EntityRemovedEvent OnEntityRemoved;
-        public delegate void ComponentUpdateEvent(int id, int componentId, Dictionary<string, object> value);
-        public event ComponentUpdateEvent OnComponentUpdated;
+        public delegate void BroadcastEvent(byte[] array);
+        public event BroadcastEvent Broadcast;
 
         void _group_OnEntityRemoved(Group group, Entity entity, int index, IComponent component)
         {
-            if (OnEntityRemoved != null && entity.hasSynchronized)
-                OnEntityRemoved(entity.synchronized.id);
+            if (Broadcast != null && entity.hasSynchronized)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(SynchronizationSystem.REMOVE_ENTITY);
+                        writer.Write(entity.synchronized.id);
+                        Broadcast(stream.ToArray());
+                    }
+                }
+            }
             entity.OnComponentAdded -= entity_OnComponentAdded;
             entity.OnComponentReplaced -= entity_OnComponentReplaced;
         }
 
         void _group_OnEntityAdded(Group group, Entity entity, int index, IComponent component)
         {
-            if (OnEntityAdded != null && entity.hasSynchronized)
-                OnEntityAdded(entity.synchronized.id, entity.synchronized.Type, entity.GetAllSyncComponents());
+
+            if (Broadcast != null && entity.hasSynchronized)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(SynchronizationSystem.CREATE_ENTITY);
+                        entity.Serialize(writer);
+                        Broadcast(stream.ToArray());
+                    }
+                }
+            }
             entity.OnComponentAdded += entity_OnComponentAdded;
             entity.OnComponentReplaced += entity_OnComponentReplaced;
         }
 
         protected void BroadcastUpdate(Entity entity, IComponent component)
         {
-            if (OnComponentUpdated != null && entity.hasSynchronized && component.IsSyncData())
+            if (Broadcast != null && entity.hasSynchronized && component.IsSyncData())
             {
-                
-                OnComponentUpdated(entity.synchronized.id, component.GetId(), component.GetValues());
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(SynchronizationSystem.UPDATE_ENTITY);
+                        writer.Write(entity.synchronized.id);
+                        CoreComponentIds.Serialize(component, writer);
+                        Broadcast(stream.ToArray());
+                    }
+                }
             }
         }
+
         void entity_OnComponentReplaced(Entity entity, int index, IComponent previousComponent, IComponent newComponent)
         {
             if (newComponent.IsSyncData())

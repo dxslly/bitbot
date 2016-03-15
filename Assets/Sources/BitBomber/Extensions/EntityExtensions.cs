@@ -5,24 +5,20 @@ namespace BitBots.BitBomber
 {
     public static class EntityExtension
     {
-        public static Entity AddSynchronized(this Entity entity, EntityType type)
+        public static Entity AddSynchronized(this Entity entity)
         {
-            return entity.AddSynchronized(BitBots.BitBomber.Features.Synchronized.SynchronizedComponent.NextId++, type);
+            return entity.AddSynchronized(BitBots.BitBomber.Features.Synchronized.SynchronizedComponent.NextId++);
         }
 
-        public static Dictionary<int, Dictionary<string, object>> GetAllSyncComponents(this Entity entity)
+        public static void Serialize(this Entity entity, System.IO.BinaryWriter writer)
         {
-
-            var list = new Dictionary<int, Dictionary<string, object>>();
-            var components = entity.GetComponentIndices();
-            for(int i =0;i<components.Length;++i)
+            writer.Write(entity.synchronized.id);
+            var components = entity.GetComponents();
+            writer.Write(components.Length);
+            foreach (var c in components)
             {
-                if (entity.GetComponent(components[i]).IsSyncData())
-                {
-                    list.Add(components[i], entity.GetComponent(components[i]).GetValues());
-                }
+                CoreComponentIds.Serialize(c, writer);
             }
-            return list;
         }
     }
 }
