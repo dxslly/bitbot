@@ -19,6 +19,32 @@ namespace BitBots.BitBomber
 #if !LOGIC_ONLY
     public class SynchronizationObject : MonoBehaviour
     {
+
+        // Use this for initialization
+        public IEnumerator Start()
+        {
+            WebSocket w = new WebSocket(new System.Uri("ws://localhost:38681/MatchBroadcast.ashx"));
+            yield return StartCoroutine(w.Connect());
+            w.SendString("Hi there");
+            int i = 0;
+            while (true)
+            {
+                string reply = w.RecvString();
+                if (reply != null)
+                {
+                    broadcast(reply);
+                }
+
+                if (w.error != null)
+                {
+                    Debug.LogError("Error: " + w.error);
+                    break;
+                }
+                yield return 0;
+            }
+            w.Close();
+        }
+
         public void RemoveEntity(int id)
         {
             // TODO
@@ -102,7 +128,7 @@ namespace BitBots.BitBomber
                         entity = Pools.core.CreateAIPlayer(1, 1, 1, Features.Player.PlayerColor.Blue, null);
                         break;
                     case Features.Synchronized.EntityType.Bomb:
-                        entity = Pools.core.CreateBomb(null, 0, 0, 0, 0);
+                        entity = Pools.core.CreateBomb(null, 0, 0, 5, 1);
                         break;
 
                     default:
